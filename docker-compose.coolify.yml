@@ -1,11 +1,19 @@
+# Coolify Docker Compose
+# ─────────────────────────────────────────────────────────────
+# Deploy steps:
+#   1. Push this repo to GitHub/GitLab
+#   2. Coolify → New Resource → Docker Compose → connect your repo
+#   3. Set "Compose file" to docker-compose.coolify.yml
+#   4. Under the frontend service → Domains → enter your domain
+#   5. Hit Deploy — Coolify builds images, wires SSL, done.
+# ─────────────────────────────────────────────────────────────
+
 services:
   mongo:
     image: mongo:7
     restart: unless-stopped
     volumes:
       - mongo_data:/data/db
-    networks:
-      - raptor_net
     healthcheck:
       test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand('ping').ok"]
       interval: 10s
@@ -22,8 +30,6 @@ services:
     depends_on:
       mongo:
         condition: service_healthy
-    networks:
-      - raptor_net
     healthcheck:
       test: ["CMD", "node", "-e", "require('http').get('http://localhost:5000/api/health', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"]
       interval: 10s
@@ -34,16 +40,13 @@ services:
   frontend:
     build: ./frontend
     restart: unless-stopped
-    ports:
-      - "80:80"
     depends_on:
       backend:
         condition: service_healthy
-    networks:
-      - raptor_net
+    environment:
+      # Coolify reads this to know which service+port to route your domain to.
+      # It replaces the value with your configured FQDN and handles SSL.
+      - SERVICE_FQDN_FRONTEND_80
 
 volumes:
   mongo_data:
-
-networks:
-  raptor_net:

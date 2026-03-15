@@ -326,7 +326,7 @@ services:
   traefik:
     image: traefik:v3
     command:
-      - "--providers.docker=true"
+      - "--providers.docker=true" 
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--certificatesresolvers.le.acme.httpchallenge=true"
