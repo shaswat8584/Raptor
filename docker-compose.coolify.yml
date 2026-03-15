@@ -24,11 +24,12 @@ services:
   backend:
     build: ./backend
     restart: unless-stopped
+    ports:
+      - "5000:5000"
     environment:
       - MONGO_URI=mongodb://mongo:27017/raptor
       - PORT=5000
       - FRONTEND_URL=http://165.232.188.63
-      - SERVICE_FQDN_BACKEND_5000=http://api.165.232.188.63.sslip.io
     depends_on:
       mongo:
         condition: service_healthy
@@ -43,7 +44,7 @@ services:
     build:
       context: ./frontend
       args:
-        VITE_API_URL: http://api.165.232.188.63.sslip.io/api
+        VITE_API_URL: http://165.232.188.63:5000/api
     restart: unless-stopped
     depends_on:
       backend:
