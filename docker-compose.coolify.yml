@@ -46,7 +46,7 @@ services:
     environment:
       # Coolify reads this to know which service+port to route your domain to.
       # It replaces the value with your configured FQDN and handles SSL.
-      - SERVICE_FQDN_FRONTEND_80
+      - SERVICE_FQDN_FRONTEND_80=https://raptor.codeclub.space
 
 volumes:
   mongo_data:
