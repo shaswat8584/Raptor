@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import VideoSpine from './VideoSpine.jsx';
 import AddVideoModal from './AddVideoModal.jsx';
@@ -8,6 +8,12 @@ export default function ShelfRow({ shelf, shelves, onVideoAdded, onVideoDeleted,
   const [showAddVideo, setShowAddVideo] = useState(false);
   const [confirmDeleteShelf, setConfirmDeleteShelf] = useState(false);
   const [videos, setVideos] = useState(shelf.videos || []);
+
+  useEffect(() => {
+    if (shelf.videos && shelf.videos.length > 0) {
+      setVideos(shelf.videos);
+    }
+  }, [shelf.videos]);
 
   const handleDeleteVideo = async (videoId) => {
     await deleteVideo(videoId);
